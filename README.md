@@ -49,10 +49,10 @@ npm install webpack@5.68.0 webpack-cli@4.9.2 webpack-dev-server@4.7.4 html-webpa
   ```import 'productsApp/ProductsIndex';```
 
 - container/webpack.config.js
-  ```remotes { productsApp: 'productsXXX@http://localhost:8081/remoteEntry.js' }```
+  ```remotes { productsApp: 'myproducts@http://localhost:8081/remoteEntry.js' }```
 
 - products/webpack.config.js
-  ```name: 'productsXXX', filename: 'remoteEntry.js', exposes: { './ProductsIndex': './src/index' }```
+  ```name: 'myproducts', filename: 'remoteEntry.js', exposes: { './ProductsIndex': './src/index' }```
 
 ### Shared libraries (the same version)
 
