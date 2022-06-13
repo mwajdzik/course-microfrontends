@@ -1,8 +1,9 @@
-// import {mount} from 'products/ProductsIndex';
+import {mount as productsMount} from 'products/ProductsIndex';
+import {mount as cartMount} from 'cart/CartIndex';
 
-import 'products/ProductsIndex';
-import 'cart/CartIndex';
+console.log('container - mounting');
 
-console.log('container');
+productsMount(document.querySelector('#my-products'));
+cartMount(document.querySelector('#my-cart'));
 
-// mount(document.querySelector('#products'))
+console.log('container - mounted');
