@@ -31,6 +31,45 @@ resource "aws_s3_bucket_website_configuration" "microfrontends" {
 
 # ---
 
+resource "aws_iam_user" "user" {
+  name = "service_account_${aws_s3_bucket.bucket.bucket}"
+}
+
+resource "aws_iam_access_key" "user_keys" {
+  user = aws_iam_user.user.name
+}
+
+output "secret" {
+  value = aws_iam_access_key.user_keys.encrypted_secret
+}
+
+resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+  bucket = aws_s3_bucket.bucket.id
+  policy = data.aws_iam_policy_document.allow_s3_access.json
+}
+
+data "aws_iam_policy_document" "allow_s3_access" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_user.user.arn]
+    }
+
+    actions = [
+      "s3:*"
+    ]
+
+    resources = [
+      aws_s3_bucket.bucket.arn,
+      "${aws_s3_bucket.bucket.arn}/*",
+    ]
+  }
+}
+
+# ---
+
 resource "aws_cloudfront_distribution" "www_s3_distribution" {
   origin {
     domain_name = "${aws_s3_bucket.bucket.bucket}.s3.${aws_s3_bucket.bucket.region}.amazonaws.com"
