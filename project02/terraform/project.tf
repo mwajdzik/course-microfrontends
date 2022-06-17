@@ -18,7 +18,7 @@ resource "aws_s3_bucket_acl" "acl" {
 
 resource "aws_s3_bucket_policy" "allow_read_access" {
   bucket = aws_s3_bucket.bucket.id
-  policy = templatefile("s3-policy.json", { bucket = aws_s3_bucket.bucket.bucket })
+  policy = templatefile("templates/s3-policy.json", { bucket = aws_s3_bucket.bucket.bucket })
 }
 
 resource "aws_s3_bucket_website_configuration" "microfrontends" {
@@ -39,36 +39,25 @@ resource "aws_iam_access_key" "user_keys" {
   user = aws_iam_user.user.name
 }
 
+resource "aws_iam_user_policy" "s3" {
+  name = "service_account_s3_policy"
+  user = aws_iam_user.user.name
+
+  policy = templatefile("templates/iam-user-role-s3.json", {
+    bucket = aws_s3_bucket.bucket.bucket
+  })
+}
+
+resource "aws_iam_user_policy" "cloud_front" {
+  name = "service_account_cloud_front_policy"
+  user = aws_iam_user.user.name
+
+  policy = templatefile("templates/iam-user-role-cloudfront.json", {})
+}
+
 output "secret" {
   value = aws_iam_access_key.user_keys.encrypted_secret
 }
-
-resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
-  bucket = aws_s3_bucket.bucket.id
-  policy = data.aws_iam_policy_document.allow_s3_access.json
-}
-
-data "aws_iam_policy_document" "allow_s3_access" {
-  statement {
-    effect = "Allow"
-
-    principals {
-      type        = "AWS"
-      identifiers = [aws_iam_user.user.arn]
-    }
-
-    actions = [
-      "s3:*"
-    ]
-
-    resources = [
-      aws_s3_bucket.bucket.arn,
-      "${aws_s3_bucket.bucket.arn}/*",
-    ]
-  }
-}
-
-# ---
 
 resource "aws_cloudfront_distribution" "www_s3_distribution" {
   origin {
