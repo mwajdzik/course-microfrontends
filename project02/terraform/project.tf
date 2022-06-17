@@ -4,6 +4,9 @@ provider "aws" {
   profile = "default"
 }
 
+data "aws_caller_identity" "current" {
+}
+
 resource "aws_s3_bucket" "bucket" {
   bucket = "course-microfrontends-bucket"
   tags   = {
@@ -52,7 +55,10 @@ resource "aws_iam_user_policy" "cloud_front" {
   name = "service_account_cloud_front_policy"
   user = aws_iam_user.user.name
 
-  policy = templatefile("templates/iam-user-role-cloudfront.json", {})
+  policy = templatefile("templates/iam-user-role-cloudfront.json", {
+    project      = data.aws_caller_identity.current.account_id
+    distribution = aws_cloudfront_distribution.www_s3_distribution.id
+  })
 }
 
 output "secret" {
