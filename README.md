@@ -58,4 +58,17 @@ npm install webpack@5.68.0 webpack-cli@4.9.2 webpack-dev-server@4.7.4 html-webpa
 
 - shared: ['faker']
 - package.json version is checked (^ = only major number must match)
-- shared: { faker: { singleton: true }}  - load only one version no matter what (eg. for React)
+- shared: { faker: { singleton: true }} - load only one version no matter what (eg. for React)
+
+### CSS Scoping Solutions
+
+#### custom CSS
+
+- use CSS-in-JS library
+- use Vue's built-in component style scoping
+- use Angular's built-in component style scoping
+- namespace all your css (easiest - root element has a class for a given frontend)
+
+#### CSS coming from a component library oc CSS library
+
+- use a component library that does css-in-jss (eg. material ui)
