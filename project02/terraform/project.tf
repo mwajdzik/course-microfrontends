@@ -14,6 +14,20 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "delete_after_seven_days" {
+  bucket = aws_s3_bucket.bucket.id
+
+  rule {
+    id = "delete_after_seven-days"
+
+    expiration {
+      days = 7
+    }
+
+    status = "Enabled"
+  }
+}
+
 resource "aws_s3_bucket_acl" "acl" {
   bucket = aws_s3_bucket.bucket.id
   acl    = "public-read"
