@@ -7,6 +7,8 @@ provider "aws" {
 data "aws_caller_identity" "current" {
 }
 
+# ---
+
 resource "aws_s3_bucket" "bucket" {
   bucket = "course-microfrontends-bucket"
   tags   = {
@@ -75,9 +77,7 @@ resource "aws_iam_user_policy" "cloud_front" {
   })
 }
 
-output "secret" {
-  value = aws_iam_access_key.user_keys.encrypted_secret
-}
+# ---
 
 resource "aws_cloudfront_distribution" "www_s3_distribution" {
   origin {
