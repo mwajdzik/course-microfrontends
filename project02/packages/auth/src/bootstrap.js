@@ -5,8 +5,10 @@ import {createBrowserHistory, createMemoryHistory} from 'history';
 
 import App from './App'
 
-const mount = (el, {onNavigate, defaultHistory}) => {
-    const history = defaultHistory || createMemoryHistory();
+const mount = (el, {onNavigate, defaultHistory, initialPath}) => {
+    const history = defaultHistory || createMemoryHistory({
+        initialEntries: [initialPath]
+    });
 
     if (onNavigate) {
         history.listen(onNavigate);
@@ -16,7 +18,7 @@ const mount = (el, {onNavigate, defaultHistory}) => {
 
     return {
         onParentNavigate({pathname: nextPathName}) {
-            console.log('Container just navigated to', nextPathName);
+            console.log('[Auth] Container just navigated to', nextPathName);
 
             if (history.location.pathname !== nextPathName) {
                 history.push(nextPathName);

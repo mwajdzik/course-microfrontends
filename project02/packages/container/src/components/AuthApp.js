@@ -1,4 +1,4 @@
-import {mount as marketingMount} from 'marketing/MarketingApp';
+import {mount as authMount} from 'auth/AuthApp';
 import React, {useEffect, useRef} from 'react';
 import {useHistory} from 'react-router-dom'
 
@@ -7,10 +7,10 @@ export default () => {
     const history = useHistory();
 
     useEffect(() => {
-        const {onParentNavigate} = marketingMount(ref.current, {
+        const {onParentNavigate} = authMount(ref.current, {
             initialPath: history.location.pathname,
             onNavigate: ({pathname: nextPathName}) => {
-                console.log('The container noticed navigation in Marketing to', nextPathName);
+                console.log('The container noticed navigation in Auth to', nextPathName);
 
                 if (history.location.pathname !== nextPathName) {
                     history.push(nextPathName);
