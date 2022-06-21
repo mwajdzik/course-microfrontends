@@ -2,13 +2,19 @@ import {mount as authMount} from 'auth/AuthApp';
 import React, {useEffect, useRef} from 'react';
 import {useHistory} from 'react-router-dom'
 
-export default () => {
+export default ({onSignedIn}) => {
     const ref = useRef(null);
     const history = useHistory();
 
     useEffect(() => {
         const {onParentNavigate} = authMount(ref.current, {
             initialPath: history.location.pathname,
+
+            onSignIn: () => {
+                console.log("User signed in");
+                onSignedIn();
+            },
+
             onNavigate: ({pathname: nextPathName}) => {
                 console.log('The container noticed navigation in Auth to', nextPathName);
 
